@@ -4,10 +4,7 @@ import datetool as dt
 from datetime import date
 
 def queryDailyK(market, code, startDate, endDate):
-    bao.login()
-
     data = bao.queryDailyKData(market + '.' + code, startDate, endDate)
-    bao.logout()
 
     return data
 
