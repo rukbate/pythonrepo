@@ -10,7 +10,7 @@ def login():
     __logged_in__ = True
 
     if(lg.error_code != '0'):
-        print(f'Login error_code: {lg.error_code}, error_msg: {lg.error_msg}')
+        print(f'login error_code: {lg.error_code}, error_msg: {lg.error_msg}')
         sys.exit(1)
 
 def logout():
@@ -34,12 +34,25 @@ def queryDailyKData(code, startDate, endDate):
         frequency="d", adjustflag="3")
 
     if(rs.error_code != '0'):
-        print(f'bsQueryDailyKData error_code: {rs.error_code}, error_msg: {rs.error_msg}')
+        print(f'query_history_k_data_plus error_code: {rs.error_code}, error_msg: {rs.error_msg}')
         sys.exit(1)
 
     resultset = []
     while(rs.error_code == '0') & rs.next():
-        row = rs.get_row_data()
-        resultset.append(row)
+        resultset.append(rs.get_row_data())
     
     return pd.DataFrame(resultset, columns=rs.fields)
+
+def querySZ50Stocks():
+    enforceLogin()
+
+    rs = bs.query_sz50_stocks()
+    if(rs.error_code != '0'):
+        print(f'query_sz50_stocks error_code: {rs.error_code}, error_msg: {rs.error_msg}')
+        sys.exit(1)
+
+    sz50_stocks = []
+    while (rs.error_code == '0') & rs.next():    
+        sz50_stocks.append(rs.get_row_data())
+
+    return pd.DataFrame(sz50_stocks, columns=rs.fields)
