@@ -1,6 +1,5 @@
-import bao
 import dailyk as dk
+import index as idx
 
 dk.syncExistingStocks()
-print(bao.querySZ50Stocks())
-
+idx.updateAllIndexes()

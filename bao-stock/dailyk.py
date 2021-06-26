@@ -17,7 +17,7 @@ def getExistingStocks():
 
     return rs
 
-def saveDailyK(data):
+def persistDailyK(data):
     sql = """
         insert into day_k(market, date, code, open, high, low, close, pre_close, volume, amount, adjust_flag, turn, trade_status, pct_chg, pe_ttm, pb_mrq, ps_ttm, pcf_nc_ttm, is_st)
         values('{market}', '{date}', '{code}', {open}, {high}, {low}, {close}, {preclose}, {volume}, {amount}, {adjustflag}, {turn}, {tradestatus}, {pctChg}, {peTTM}, {pbMRQ}, {psTTM}, {pcfNcfTTM}, {isST})
@@ -45,7 +45,7 @@ def syncDailyK(market, code):
     newData = queryDailyK(market, code, startDate.isoformat(), endDate.isoformat())
     print(f"Retrieved {len(newData)} days data for {market}.{code}")
 
-    saveDailyK(newData)
+    persistDailyK(newData)
 
 def syncExistingStocks():
     stocks = getExistingStocks()
