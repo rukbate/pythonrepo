@@ -40,3 +40,13 @@ def updateIndex(type):
 def updateAllIndexes():
     for k in indexes:
         updateIndex(k)
+
+def getIndex(type):
+    conn = mdb.connectAShare()
+    data = mdb.query(
+        conn,
+        f"select * from idx where type = '{type}'"
+    )
+
+    mdb.close(conn)
+    return data

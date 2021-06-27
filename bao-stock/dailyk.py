@@ -74,7 +74,12 @@ def syncExistingStocks():
     for exchange, code in stocks.to_numpy():
         syncDailyK(exchange, code)
 
-    
+def getDailyK(exchange, code):
+    conn = mdb.connectAShare()
+    data = mdb.query(
+        conn, 
+        f"select * from day_k where exchange = '{exchange}' and code = '{code}'"
+    )
 
-
-    
+    mdb.close(conn)
+    return data
