@@ -1,5 +1,5 @@
 create table day_k (
-    market 		char(2),
+    exchange	char(2),
     date		date,
     code 		char(6),
     open		float(10,2),
@@ -21,4 +21,4 @@ create table day_k (
     primary key (code, date)
 );
 
-create index day_k_idx1 on day_k(market, is_st);
+create index day_k_idx1 on day_k(exchange, is_st);

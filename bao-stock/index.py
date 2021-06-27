@@ -16,12 +16,12 @@ def deleteIndex(type):
     mdb.close(conn)
 
 def persistIndex(type, data):
-    sql = "insert into idx(type, market, code, name, update_date) values('{type}', '{market}', '{code}', '{code_name}', '{updateDate}')"
+    sql = "insert into idx(type, exchange, code, name, update_date) values('{type}', '{exchange}', '{code}', '{code_name}', '{updateDate}')"
 
     conn = mdb.connectAShare()
     for index, row in data.iterrows():
         row['type'] = type
-        row['market'] = row['code'][:2]
+        row['exchange'] = row['code'][:2]
         row['code'] = row['code'][3:]
         mdb.execute(conn, sql.format(**row))
     

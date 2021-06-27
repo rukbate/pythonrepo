@@ -2,11 +2,11 @@ from datetime import date
 from datetime import timedelta
 import mdb
 
-def getStartDate(market, code):
-    maxDateSql = "select max(date) as max_date from day_k where market = '{market}' and code = '{code}'"
+def getStartDate(exchange, code):
+    maxDateSql = "select max(date) as max_date from day_k where exchange = '{exchange}' and code = '{code}'"
     conn = mdb.connectAShare()
 
-    rs = mdb.query(conn, maxDateSql.format(market = market, code = code))
+    rs = mdb.query(conn, maxDateSql.format(exchange = exchange, code = code))
     conn.close()
     
     maxDate = rs.loc[0, 'max_date']
