@@ -1,6 +1,7 @@
 from datetime import date
 from datetime import timedelta
 import mdb
+import info
 
 def getStartDate(exchange, code):
     maxDateSql = "select max(date) as max_date from day_k where exchange = '{exchange}' and code = '{code}'"
@@ -13,7 +14,9 @@ def getStartDate(exchange, code):
     if maxDate != None:
         startDate = maxDate + timedelta(days=1)
     else:
-        startDate = date(1980, 1, 1)
+        startDate = info.getIpoDate(exchange, code)
+        if startDate == None:
+            startDate = date(1980, 1, 1)
 
     return startDate
 

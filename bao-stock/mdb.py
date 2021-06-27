@@ -41,5 +41,13 @@ def execute(conn, sql):
     except mariadb.Error as err:
         print(f"Error execute sql: {err}")
 
+def executeMany(conn, sql, data):
+    try:
+        cur = conn.cursor()
+        cur.executemany(sql, data)
+        conn.commit()
+    except mariadb.Error as err:
+        print(f"Error execute sql: {err}")
+
 def close(conn):
     conn.close()

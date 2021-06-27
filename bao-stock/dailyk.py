@@ -18,18 +18,39 @@ def getExistingStocks():
     return rs
 
 def persistDailyK(data):
-    sql = """
-        insert into day_k(exchange, date, code, open, high, low, close, pre_close, volume, amount, adjust_flag, turn, trade_status, pct_chg, pe_ttm, pb_mrq, ps_ttm, pcf_nc_ttm, is_st)
-        values('{exchange}', '{date}', '{code}', {open}, {high}, {low}, {close}, {preclose}, {volume}, {amount}, {adjustflag}, {turn}, {tradestatus}, {pctChg}, {peTTM}, {pbMRQ}, {psTTM}, {pcfNcfTTM}, {isST})
-        """
+    sql = """insert into day_k(exchange, date, code, open, high, low, close, pre_close, volume, 
+             amount, adjust_flag, turn, trade_status, pct_chg, pe_ttm, pb_mrq, ps_ttm, pcf_nc_ttm, is_st)
+             values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          """
+
+    kdata = []    
+    for index, row in data.iterrows():
+        kdata.append(
+            (
+                row['code'][:2],
+                row['date'],
+                row['code'][3:],
+                row['open'],
+                row['high'],
+                row['low'],
+                row['close'],
+                row['preclose'],
+                row['volume'],
+                row['amount'],
+                row['adjustflag'],
+                row['turn'] if len(row['turn']) > 0 else '0',
+                row['tradestatus'],
+                row['pctChg'],
+                row['peTTM'],
+                row['pbMRQ'],
+                row['psTTM'],
+                row['pcfNcfTTM'],
+                row['isST']
+            )
+        )
 
     conn = mdb.connectAShare()
-    for index, row in data.iterrows():
-        row['exchange'] = row['code'][:2]
-        row['code'] = row['code'][3:]
-        row['turn'] = row['turn'] if len(row['turn']) > 0 else '0'
-        mdb.execute(conn, sql.format(**row))
-    
+    mdb.executeMany(conn, sql, kdata)
     mdb.close(conn)
 
 def syncDailyK(exchange, code):

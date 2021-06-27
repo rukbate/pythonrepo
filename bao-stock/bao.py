@@ -62,7 +62,7 @@ def queryHS300Stocks():
 
     rs = bs.query_hs300_stocks()
     if(rs.error_code != '0'):
-        print(f'query_sz50_stocks error_code: {rs.error_code}, error_msg: {rs.error_msg}')
+        print(f'query_hs300_stocks error_code: {rs.error_code}, error_msg: {rs.error_msg}')
         sys.exit(1)
 
     sz50_stocks = []
@@ -76,7 +76,21 @@ def queryZZ500Stocks():
 
     rs = bs.query_zz500_stocks()
     if(rs.error_code != '0'):
-        print(f'query_sz50_stocks error_code: {rs.error_code}, error_msg: {rs.error_msg}')
+        print(f'query_zz500_stocks error_code: {rs.error_code}, error_msg: {rs.error_msg}')
+        sys.exit(1)
+
+    sz50_stocks = []
+    while (rs.error_code == '0') & rs.next():    
+        sz50_stocks.append(rs.get_row_data())
+
+    return pd.DataFrame(sz50_stocks, columns=rs.fields)
+
+def queryStockBasic(exchange, code):
+    enforceLogin()
+
+    rs = bs.query_stock_basic(code=f"{exchange}.{code}")
+    if(rs.error_code != '0'):
+        print(f'query_stock_basic error_code: {rs.error_code}, error_msg: {rs.error_msg}')
         sys.exit(1)
 
     sz50_stocks = []
