@@ -22,3 +22,4 @@ def getStartDate(exchange, code):
 
 def getEndDate():
     return date.today() + timedelta(days=1)
+    # return date(2021, 6, 29)

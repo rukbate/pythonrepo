@@ -16,7 +16,7 @@ create table day_k (
     pe_ttm		    float(12,6),
     pb_mrq		    float(12,6),
     ps_ttm		    float(12,6),
-    pcf_nc_ttm	    float(12,6),
+    pcf_nc_ttm	    float(20,6),
     is_st		    int(1),
     primary key (code, date)
 );

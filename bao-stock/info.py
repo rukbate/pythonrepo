@@ -6,6 +6,7 @@ def getInfoFromDb(exchange, code):
     conn = mdb.connectAShare()
     data = mdb.query(conn, sql)
 
+    mdb.close(conn)
     return data
 
 def getInfoFromBao(exchange, code):

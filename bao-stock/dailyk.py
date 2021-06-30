@@ -5,7 +5,6 @@ from datetime import date
 
 def queryDailyK(exchange, code, startDate, endDate):
     data = bao.queryDailyKData(exchange + '.' + code, startDate, endDate)
-
     return data
 
 def getExistingStocks():
@@ -16,6 +15,9 @@ def getExistingStocks():
     mdb.close(conn)
 
     return rs
+
+def normalize(val):
+    return val if len(val) > 0 else '0'
 
 def persistDailyK(data):
     sql = """insert into day_k(exchange, date, code, open, high, low, close, pre_close, volume, 
@@ -35,22 +37,26 @@ def persistDailyK(data):
                 row['low'],
                 row['close'],
                 row['preclose'],
-                row['volume'],
-                row['amount'],
+                normalize(row['volume']),
+                normalize(row['amount']),
                 row['adjustflag'],
-                row['turn'] if len(row['turn']) > 0 else '0',
+                normalize(row['turn']),
                 row['tradestatus'],
-                row['pctChg'],
-                row['peTTM'],
-                row['pbMRQ'],
-                row['psTTM'],
-                row['pcfNcfTTM'],
+                normalize(row['pctChg']),
+                normalize(row['peTTM']),
+                normalize(row['pbMRQ']),
+                normalize(row['psTTM']),
+                normalize(row['pcfNcfTTM']),
                 row['isST']
             )
         )
 
     conn = mdb.connectAShare()
-    mdb.executeMany(conn, sql, kdata)
+    curr = 0
+    while curr < len(kdata):
+        mdb.executeMany(conn, sql, kdata[curr:min(curr+1000, len(kdata))])
+        curr += 1000
+
     mdb.close(conn)
 
 def syncDailyK(exchange, code):
