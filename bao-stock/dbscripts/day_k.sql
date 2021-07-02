@@ -22,3 +22,4 @@ create table day_k (
 );
 
 create index day_k_idx1 on day_k(exchange, is_st);
+create index day_k_idx2 on day_k(exchange, code);
