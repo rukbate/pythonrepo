@@ -2,15 +2,19 @@ import mariadb
 import sys
 import numpy as np
 import pandas as pd
-
-dbServer = '192.168.11.11'
-dbPort = 3307
-username = 'ashare'
-password = 'synology@mariaDB10'
-database = 'ashare'
+import configparser
 
 def connectAShare():
-    return connect(dbServer, dbPort, username, password, database)
+    cp = configparser.ConfigParser()
+    cp.read('dbscripts/db.properties')
+    config = cp['DEFAULT']
+    return connect(
+        config['dbServer'], 
+        config.getint('dbPort'), 
+        config['username'],
+        config['password'], 
+        config['database']
+    )
 
 def connect(host, port, user, password, database):
     try:
