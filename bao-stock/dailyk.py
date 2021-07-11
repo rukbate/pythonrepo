@@ -81,12 +81,15 @@ def syncExistingStocks():
     for exchange, code in stocks.to_numpy():
         syncDailyK(exchange, code)
 
-def getDailyK(exchange, code):
+def getDailyK(exchange, code, startDate=None, endDate=None):
+    sql = f"select date, open, close, high, low, volume from day_k where exchange = '{exchange}' and code = '{code}'"
+    if startDate != None:
+        sql = sql + f" and date >= '{startDate}'"
+    if endDate != None:
+        sql = sql + f" and date <= '{endDate}'"
+    sql = sql + " order by date"
     conn = mdb.connectAShare()
-    data = mdb.query(
-        conn, 
-        f"select date, open, close, high, low, volume from day_k where exchange = '{exchange}' and code = '{code}' order by date"
-    )
+    data = mdb.query(conn, sql)
 
     mdb.close(conn)
     data.index = pd.to_datetime(data['date'])
