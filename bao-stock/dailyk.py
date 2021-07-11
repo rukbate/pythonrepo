@@ -2,6 +2,7 @@ import bao
 import mdb
 import datetool as dt
 from datetime import date
+import pandas as pd
 
 def queryDailyK(exchange, code, startDate, endDate):
     data = bao.queryDailyKData(exchange + '.' + code, startDate, endDate)
@@ -84,8 +85,9 @@ def getDailyK(exchange, code):
     conn = mdb.connectAShare()
     data = mdb.query(
         conn, 
-        f"select * from day_k where exchange = '{exchange}' and code = '{code}'"
+        f"select date, open, close, high, low, volume from day_k where exchange = '{exchange}' and code = '{code}' order by date"
     )
 
     mdb.close(conn)
+    data.index = pd.to_datetime(data['date'])
     return data
