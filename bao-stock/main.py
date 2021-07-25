@@ -8,11 +8,13 @@ import pandas as pd
 class TestStrategy(bt.Strategy):
     params = (
         ('maperiod', 15),
+        ('printlog', False),
     )
 
-    def log(self, txt, dt=None):
-        dt = dt or self.datas[0].datetime.date(0)
-        print('%s, %s' % (dt.isoformat(), txt))
+    def log(self, txt, dt=None, doprint=False):
+        if self.params.printlog or doprint:
+            dt = dt or self.datas[0].datetime.date(0)
+            print('%s, %s' % (dt.isoformat(), txt))
 
     def __init__(self):
         self.dataopen = self.datas[0].open
@@ -25,14 +27,6 @@ class TestStrategy(bt.Strategy):
             self.datas[0], 
             period=self.params.maperiod
         )
-
-        bt.indicators.ExponentialMovingAverage(self.datas[0], period=25)
-        bt.indicators.WeightedMovingAverage(self.datas[0], period=25, subplot=True)
-        bt.indicators.StochasticSlow(self.datas[0], safediv=True)
-        bt.indicators.MACDHisto(self.datas[0])
-        rsi = bt.indicators.RSI(self.datas[0])
-        bt.indicators.SmoothedMovingAverage(rsi, period=10)
-        bt.indicators.ATR(self.datas[0], plot=False)
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -61,7 +55,7 @@ class TestStrategy(bt.Strategy):
         self.log(f'OPERATION PROFIT, GROSS {trade.pnl}, NET {trade.pnlcomm}')
 
     def next(self):
-        # self.log('Open: %.2f, Close: %.2f' % (self.dataopen[0], self.dataclose[0]))
+        self.log('Open: %.2f, Close: %.2f' % (self.dataopen[0], self.dataclose[0]))
 
         if self.order:
             return 
@@ -74,9 +68,13 @@ class TestStrategy(bt.Strategy):
             if self.dataclose[0] < self.sma[0]:
                 self.log(f'SELL CREATE, {self.dataclose[0]}')
                 self.order = self.sell()
+    
+    def stop(self):
+        self.log('(MA Period %2d) Ending Value %.2f' %
+                (self.params.maperiod, self.broker.getvalue()), doprint=True)
 
 cerebro = bt.Cerebro()
-cerebro.addstrategy(TestStrategy)
+cerebro.optstrategy(TestStrategy, maperiod=range(10, 31))
 
 dataframe = dk.getDailyK('sh', '601888', '2019-01-01')
 
@@ -89,10 +87,10 @@ cerebro.broker.setcommission(commission=0.0)
 
 print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
-cerebro.run()
+cerebro.run(maxcpus=1)
 
-print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
-cerebro.plot()
+# print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+# cerebro.plot()
 
 # dk.syncExistingStocks()
 # idx.updateAllIndexes()
