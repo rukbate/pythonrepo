@@ -11,7 +11,7 @@ class TestStrategy(bt.Strategy):
         close_over_sma = self.data.close > sma
         self.sma_dist_to_high = self.data.high - sma
 
-        sma_dist_small = self.sma_dist_to_high < 3.5
+        sma_dist_small = self.sma_dist_to_high < 3.55
 
         self.sell_sig = bt.And(close_over_sma, sma_dist_small)
 
