@@ -40,10 +40,11 @@ def runTest(dataframe):
     cerebro.broker.setcash(100000.0)
     cerebro.addsizer(bt.sizers.FixedSize, stake=10)
     cerebro.broker.setcommission(commission=0.0)
+    cerebro.addwriter(bt.WriterFile, out='test.csv', csv=True)
 
     print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
 
-    cerebro.run(maxcpus=1, stdstats=False)
+    cerebro.run(stdstats=False)
 
     # print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
-    cerebro.plot()
+    # cerebro.plot()
