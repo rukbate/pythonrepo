@@ -3,8 +3,10 @@ import index as idx
 from datetime import date
 import pandas as pd
 import teststrategy as ts
+import smastrategy as ss
 
-ts.runTest(dataframe = dk.getDailyK('sh', '601888', '2020-01-01'))
+ss.runstrat(dataframe=dk.getDailyK('sh', '601888', '2020-01-01'))
+# ts.runTest(dataframe = dk.getDailyK('sh', '601888', '2020-01-01'))
 
 # idx.updateAllIndexes()
 # dk.syncExistingStocks()
