@@ -5,7 +5,7 @@ import pandas as pd
 import teststrategy as ts
 import smastrategy as ss
 
-ss.runstrat(dataframe=dk.getDailyK('sh', '601888', '2020-01-01'))
+ss.runstrat(dataframe=dk.getDailyK('sh', '601888', '2020-01-01', '2020-12-31'))
 # ts.runTest(dataframe = dk.getDailyK('sh', '601888', '2020-01-01'))
 
 # idx.updateAllIndexes()
