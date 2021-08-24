@@ -4,8 +4,10 @@ from datetime import date
 import pandas as pd
 import teststrategy as ts
 import smastrategy as ss
+import testsignal
 
-ss.runstrat(dataframe=dk.getDailyK('sh', '601888', '2020-01-01', '2020-12-31'))
+testsignal.runTest(dataframe=dk.getDailyK('sh', '601888', '2020-01-01', '2020-12-31'))
+# ss.runstrat(dataframe=dk.getDailyK('sh', '601888', '2020-01-01', '2020-12-31'))
 # ts.runTest(dataframe = dk.getDailyK('sh', '601888', '2020-01-01'))
 
 # idx.updateAllIndexes()
