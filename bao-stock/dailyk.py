@@ -5,8 +5,7 @@ from datetime import date
 import pandas as pd
 
 def queryDailyK(exchange, code, startDate, endDate):
-    data = bao.queryDailyKData(exchange + '.' + code, startDate, endDate)
-    return data
+    return bao.queryDailyKData(exchange + '.' + code, startDate, endDate)
 
 def getExistingStocks():
     sql = "select distinct exchange, code from day_k"
@@ -26,10 +25,7 @@ def persistDailyK(data):
              values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           """
 
-    kdata = []    
-    for index, row in data.iterrows():
-        kdata.append(
-            (
+    kdata = [(
                 row['code'][:2],
                 row['date'],
                 row['code'][3:],
@@ -49,15 +45,10 @@ def persistDailyK(data):
                 normalize(row['psTTM']),
                 normalize(row['pcfNcfTTM']),
                 row['isST']
-            )
-        )
-
+            ) for index, row in data.iterrows()]
     conn = mdb.connectAShare()
-    curr = 0
-    while curr < len(kdata):
+    for curr in range(0, len(kdata), 1000):
         mdb.executeMany(conn, sql, kdata[curr:min(curr+1000, len(kdata))])
-        curr += 1000
-
     mdb.close(conn)
 
 def syncDailyK(exchange, code):

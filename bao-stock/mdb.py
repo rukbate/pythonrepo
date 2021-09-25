@@ -18,14 +18,13 @@ def connectAShare():
 
 def connect(host, port, user, password, database):
     try:
-        conn = mariadb.connect(
+        return mariadb.connect(
             host = host,
             port = port,
             user = user,
             password = password,
             database = database
         )
-        return conn
     except mariadb.Error as e:
         print(f"Error connecting to MariaDB: {e}")
         sys.exit(1)

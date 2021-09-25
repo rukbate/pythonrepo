@@ -9,13 +9,13 @@ def getStartDate(exchange, code):
 
     rs = mdb.query(conn, maxDateSql.format(exchange = exchange, code = code))
     conn.close()
-    
+
     maxDate = rs.loc[0, 'max_date']
     if maxDate != None:
         startDate = maxDate + timedelta(days=1)
     else:
         startDate = info.getIpoDate(exchange, code)
-        if startDate == None:
+        if startDate is None:
             startDate = date(1980, 1, 1)
 
     return startDate

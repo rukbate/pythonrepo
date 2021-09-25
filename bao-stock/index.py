@@ -17,18 +17,25 @@ def deleteIndex(type):
 
 def persistIndex(type, data):
     sql = "insert into idx(type, exchange, code, name, update_date) values(?, ?, ?, ?, ?)"
-    indexes = []
-    
-    for index, row in data.iterrows():
-        indexes.append((type, row['code'][:2], row['code'][3:], row['code_name'], row['updateDate']))
-    
+    indexes = [
+        (
+            type,
+            row['code'][:2],
+            row['code'][3:],
+            row['code_name'],
+            row['updateDate'],
+        )
+        for index, row in data.iterrows()
+    ]
+
+
     conn = mdb.connectAShare()
     mdb.executeMany(conn, sql, indexes)
     mdb.close(conn)
     print(f"{len(data)} {type} persisted")
 
 def updateIndex(type):
-    if not type in indexes:
+    if type not in indexes:
         print(f"Invalid index type: {type}")
         return
 
