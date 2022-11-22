@@ -4,37 +4,41 @@ import numpy as np
 import pandas as pd
 import configparser
 
-def connectAShare():
+
+def connect_db():
     cp = configparser.ConfigParser()
     cp.read('dbscripts/db.properties')
     config = cp['DEFAULT']
     return connect(
-        config['dbServer'], 
-        config.getint('dbPort'), 
+        config['dbServer'],
+        config.getint('dbPort'),
         config['username'],
-        config['password'], 
+        config['password'],
         config['database']
     )
+
 
 def connect(host, port, user, password, database):
     try:
         return mariadb.connect(
-            host = host,
-            port = port,
-            user = user,
-            password = password,
-            database = database
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            database=database
         )
     except mariadb.Error as e:
         print(f"Error connecting to MariaDB: {e}")
         sys.exit(1)
 
+
 def query(conn, sql):
     cur = conn.cursor()
     cur.execute(sql)
-    
+
     columns = np.asarray(cur.description)[:, 0]
     return pd.DataFrame(cur.fetchall(), columns=columns)
+
 
 def execute(conn, sql):
     try:
@@ -44,13 +48,15 @@ def execute(conn, sql):
     except mariadb.Error as err:
         print(f"Error execute sql: {err}")
 
-def executeMany(conn, sql, data):
+
+def execute_batch(conn, sql, data):
     try:
         cur = conn.cursor()
         cur.executemany(sql, data)
         conn.commit()
     except mariadb.Error as err:
         print(f"Error execute sql: {err}")
+
 
 def close(conn):
     conn.close()
