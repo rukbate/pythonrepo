@@ -12,12 +12,11 @@ def delete_index(idx):
 
 
 def persist_index(idx, data):
-    sql = "insert into idx(type, exchange, code, name, update_date) values(?, ?, ?, ?, ?)"
+    sql = "insert into idx(type, code, name, update_date) values(?, ?, ?, ?)"
     indexes = [
         (
             idx,
-            row['code'][:2],
-            row['code'][3:],
+            row['code'],
             row['code_name'],
             row['updateDate'],
         )

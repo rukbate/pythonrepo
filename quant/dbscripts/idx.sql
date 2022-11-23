@@ -1,8 +1,7 @@
 create table idx (
     type            varchar(10),
-    exchange        char(2),
-    code            char(6),
-    name            varchar(10),
+    code            char(9),
+    name            varchar(255),
     update_date     date,
-    primary key (type, exchange, code)
+    primary key (type, code)
 );

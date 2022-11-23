@@ -73,10 +73,10 @@ def index_stocks(idx):
     return pd.DataFrame(stocks, columns=rs.fields)
 
 
-def stock_basic(exchange, code):
+def stock_basic(code):
     enforce_login()
 
-    rs = bs.query_stock_basic(code=f"{exchange}.{code}")
+    rs = bs.query_stock_basic(code=f"{code}")
     if rs.error_code != '0':
         print(f'query_stock_basic error_code: {rs.error_code}, error_msg: {rs.error_msg}')
         sys.exit(1)
@@ -86,3 +86,31 @@ def stock_basic(exchange, code):
         data.append(rs.get_row_data())
 
     return pd.DataFrame(data, columns=rs.fields)
+
+
+def all_stocks(market_date):
+    enforce_login()
+
+    rs = bs.query_all_stock(day=market_date)
+    if rs.error_code != '0':
+        print(f'query_stock_basic error_code: {rs.error_code}, error_msg: {rs.error_msg}')
+        sys.exit(1)
+
+    data_list = []
+    while (rs.error_code == '0') & rs.next():
+        data_list.append(rs.get_row_data())
+    return pd.DataFrame(data_list, columns=rs.fields)
+
+
+def profit(code, year=None, quarter=None):
+    enforce_login()
+
+    rs = bs.query_profit_data(code=code, year=year, quarter=quarter)
+    if rs.error_code != '0':
+        print(f'query_stock_basic error_code: {rs.error_code}, error_msg: {rs.error_msg}')
+        sys.exit(1)
+
+    profit_list = []
+    while (rs.error_code == '0') & rs.next():
+        profit_list.append(rs.get_row_data())
+    return pd.DataFrame(profit_list, columns=rs.fields)

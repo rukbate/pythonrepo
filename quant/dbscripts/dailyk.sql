@@ -1,7 +1,6 @@
-create table day_k (
-    exchange	    char(2),
+create table dailyk (
+    code	        char(9),
     date		    date,
-    code 		    char(6),
     open		    float(10,2),
     high		    float(10,2),
     low			    float(10,2),
@@ -19,7 +18,8 @@ create table day_k (
     pcf_nc_ttm	    float(20,6),
     is_st		    int(1),
     primary key (code, date)
-);
+)
+partition by key(code)
+partitions 8;
 
-create index day_k_idx1 on day_k(exchange, is_st);
-create index day_k_idx2 on day_k(exchange, code);
+create index dailyk_idx1 on dailyk(code, is_st);
