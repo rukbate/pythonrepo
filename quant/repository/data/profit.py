@@ -15,8 +15,14 @@ def persist_profit(data):
     conn = mdb.connect_db()
     for index, row in data.iterrows():
         row['code'] = row['code']
+        row['roeAvg'] = normalize(row['roeAvg'])
+        row['npMargin'] = normalize(row['npMargin'])
         row['gpMargin'] = normalize(row['gpMargin'])
+        row['netProfit'] = normalize(row['netProfit'])
+        row['epsTTM'] = normalize(row['epsTTM'])
         row['MBRevenue'] = normalize(row['MBRevenue'])
+        row['totalShare'] = normalize(row['totalShare'])
+        row['liqaShare'] = normalize(row['liqaShare'])
         mdb.execute(conn, sql.format(**row))
 
     mdb.close(conn)

@@ -1,12 +1,13 @@
-from market import market
-from repository import mdb
+import threading
 from datetime import date
 from datetime import timedelta
-from repository.data import basic
-from util.stringutil import normalize_number as normalize
+
 import pandas as pd
-import threading
-import math
+from market import market
+from repository import mdb
+from repository.data import basic
+from repository.data import index
+from util.stringutil import normalize_number as normalize
 
 
 def existing_stocks():
@@ -83,6 +84,16 @@ def sync_all_stocks():
     t1 = threading.Thread(target=sync_stocks, args=(codes[:],))
     t1.start()
     t1.join()
+
+
+def sync_index_stocks():
+    codes = []
+    for idx in ['sz50', 'hs300', 'zz500']:
+        stocks = index.retrieve_ndex(idx)
+        for s in stocks['code']:
+            codes.append(s)
+
+    sync_stocks(codes)
 
 
 def retrieve_daily_k(code, start_date=None, end_date=None):

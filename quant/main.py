@@ -10,7 +10,10 @@ from market import market
 
 # dx.update_indexes()
 # dk.sync_all_stocks()
+dk.sync_index_stocks()
 
 # pf.persist_profit(market.profit('sh.601888', 2022, 1))
-pf.update_all_profit()
-# print(bc.ipo_date('sh.603052'))
+# pf.update_all_profit()
+# pf.update_profit('sh.600139')
+# print(bc.ipo_date('sh.600139'))
+
